@@ -1,2 +1,2 @@
 export * from './jwt.config';
-export * from './bcrypt.constants';
+export * from './bcrypt.config';
