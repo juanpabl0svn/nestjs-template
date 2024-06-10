@@ -1,22 +1,20 @@
 import { Module } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from 'prisma/prisma.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { JWTConfig } from 'src/config';
+import { JWTGuard } from 'src/guards/jwt.guard';
+import { JwtStrategy } from 'src/strategies/jwt.strategy';
 
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../constants';
 
 
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, PrismaService, JwtService],
+  providers: [UserService, JWTGuard, JwtStrategy],
   imports: [
-    JwtModule.register({
-      global: true,
-      secret: JWT_SECRET,
-      signOptions: { expiresIn: JWT_EXPIRES_IN }
-    })
+    JwtModule.registerAsync(JWTConfig)
   ]
 })
 export class userModule { }

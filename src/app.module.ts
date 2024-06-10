@@ -6,11 +6,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { userModule } from './user/user.module';
 
 
+
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
   }), userModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule { }

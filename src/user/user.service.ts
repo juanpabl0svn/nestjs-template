@@ -1,30 +1,39 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'prisma/prisma.service';
+// import { Prisma } from '@prisma/client';
+// import { PrismaService } from 'prisma/prisma.service';
 import { UserDto } from './dto/user.dto';
 import { compare, hash } from 'bcrypt';
-import { SALT } from 'src/constants';
+import { JWTConfig, SALT } from 'src/config';
 
 
 @Injectable()
 export class UserService {
 
-    constructor(private prisma: PrismaService, private jwt: JwtService) { }
+    constructor(private jwt: JwtService) { }
 
     async login(email: string, password: string) {
         email = email.toLowerCase()
 
-        const user = await this.prisma.user.findFirst({
-            where: {
-                email
-            }
-        });
+
+        // const user = await this.prisma.user.findFirst({
+        //     where: {
+        //         email
+        //     }
+        // });
+
+
+        const user = {
+            id: '1',
+            password: '$2b$10$DWQjjba7CWr5iNFIogoOyOGjiJ/hrU4tRWBAAcQenSY94xiEVvR02'
+        }
+
+
 
         if (!user || !(await compare(password, user.password))) {
             throw new HttpException('email or password incorrect', 400)
         }
-        const token = this.jwt.sign({ id: user.id })
+        const token = await this.jwt.signAsync({ id: user.id })
         delete user.password
         return {
             token,
@@ -37,9 +46,15 @@ export class UserService {
         user.email = user.email.toLowerCase()
         user.password = await hash(user.password, SALT)
 
-        const createdUser = await this.prisma.user.create({
-            data: user
-        });
+        // const createdUser = await this.prisma.user.create({
+        //     data: user
+        // });
+
+        const createdUser = {
+            id: '1',
+            email: '',
+            password: 'amigos'
+        }
 
         if (!createdUser) {
             throw new HttpException('user not created', 500)

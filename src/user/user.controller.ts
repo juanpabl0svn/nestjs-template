@@ -1,7 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
+import { loginDto } from './dto/login.dto';
+import { JWTGuard } from 'src/guards/jwt.guard';
 
 
 
@@ -13,7 +15,7 @@ export class UserController {
 
 
   @Post('login')
-  login(@Body() body: { email: string, password: string; }) {
+  login(@Body() body: loginDto) {
     return this.userService.login(body.email, body.password);
   }
 
@@ -21,7 +23,12 @@ export class UserController {
   @Post('register')
   register(@Body() body: UserDto) {
     return this.userService.register(body);
+  }
 
+  @UseGuards(JWTGuard)
+  @Get()
+  test() {
+    return 'Hello'
   }
 
 
