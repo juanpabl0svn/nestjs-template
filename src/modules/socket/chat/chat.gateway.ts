@@ -28,7 +28,7 @@ export class ChatGateway
     console.log('Client disconnected', client.id);
   }
 
-  @SubscribeMessage('mensaje')
+  @SubscribeMessage('message')
   handleMessage(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
     console.log(data);
     this.server.emit('mensaje', data);
